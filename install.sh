@@ -38,6 +38,11 @@ curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/
 curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/large.js -o /var/www/loadtest/large.js
 curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/large.css -o /var/www/loadtest/large.css
 
+echo "Copying site assets..."
+mkdir -p /var/www/loadtest/assets
+curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/assets/img1.jpg -o /var/www/loadtest/assets/img1.jpg
+curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/assets/img2.jpg -o /var/www/loadtest/assets/img2.jpg
+
 echo "Restarting nginx..."
 systemctl restart nginx
 
