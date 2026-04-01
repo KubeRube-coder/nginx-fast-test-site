@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Load Test</title>
+    <link rel="stylesheet" href="large.css">
+</head>
+<body>
+
+    <main class="container">
+        <header class="header">
+            <div class="status-badge">System Active</div>
+            <h1>Connection Test Page</h1>
+            <p class="subtitle">Диагностика производительности и сетевого соединения</p>
+        </header>
+
+        <section class="stats-grid">
+            <div class="card">
+                <h3>JavaScript Heap</h3>
+                <div id="js-status" class="value">Ready</div>
+            </div>
+            <div class="card">
+                <h3>Generated Items</h3>
+                <div id="content-count" class="value">0</div>
+            </div>
+        </section>
+
+        <section class="media-preview">
+            <div class="image-wrapper">
+                <img src="assets/img1.jpg" alt="Asset 1" onerror="this.parentElement.classList.add('error')">
+            </div>
+            <div class="image-wrapper">
+                <img src="assets/img2.jpg" alt="Asset 2" onerror="this.parentElement.classList.add('error')">
+            </div>
+        </section>
+
+        <div id="content" class="log-container"></div>
+    </main>
+
+    <script src="large.js"></script>
+    <script>
+        // Твоя логика с небольшим визуальным обновлением
+        const countDisplay = document.getElementById('content-count');
+        let data = [];
+        const limit = 5_000_000;
+        
+        for (let i = 0; i < limit; i++) {
+            data.push(Math.random());
+        }
+        
+        countDisplay.innerText = data.length.toLocaleString();
+        console.log("Generated:", data.length);
+    </script>
+</body>
+</html>
