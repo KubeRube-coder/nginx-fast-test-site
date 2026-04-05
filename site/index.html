@@ -2,49 +2,57 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>СЕТЕВОЙ НАГРУЗОЧНЫЙ ТЕСТ — качаем тонны трафика</title>
-    <link rel="stylesheet" href="large.css">
-    <!-- Подключаем ТЯЖЁЛЫЙ ШРИФТ (Google Fonts с жирным весом) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Дополнительный тяжёлый шрифт -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Speed Test Page</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>🌐 СЕТЕВОЙ СТРЕСС-ТЕСТ</h1>
-        <div class="stats" id="stats">
-            <div class="stat-card">
-                <h3>Загружено данных</h3>
-                <div class="stat-value" id="totalLoaded">0</div>
-                <div class="stat-unit">MB</div>
-            </div>
-            <div class="stat-card">
-                <h3>Запросов выполнено</h3>
-                <div class="stat-value" id="totalRequests">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Активных загрузок</h3>
-                <div class="stat-value" id="activeDownloads">0</div>
-            </div>
-        </div>
 
-        <div class="controls">
-            <button id="startLoadBtn" class="btn btn-primary">🚀 СТАРТ — НАГРУЗИТЬ СЕТЬ</button>
-            <button id="stopLoadBtn" class="btn btn-danger">🛑 СТОП — ОСТАНОВИТЬ</button>
-            <button id="clearCacheBtn" class="btn btn-warning">🗑️ ОЧИСТИТЬ КЭШ (перезагрузить)</button>
-        </div>
+<header class="hero">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1>Beautiful Website</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+</header>
 
-        <!-- ЗОНА ДЛЯ ВСЕХ ЗАГРУЖАЕМЫХ МЕДИАФАЙЛОВ -->
-        <div id="mediaZone" class="media-zone"></div>
-
-        <!-- ЛОГ ЗАГРУЗОК -->
-        <div class="log-panel">
-            <h3>📡 ЛОГ СЕТЕВЫХ ЗАПРОСОВ</h3>
-            <div id="logList" class="log-list"></div>
-        </div>
+<section class="content">
+    <div class="block">
+        <h2>Section 1</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
 
-    <script src="large.js"></script>
+    <div class="block">
+        <h2>Section 2</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam quis nostrud exercitation.</p>
+    </div>
+
+    <div class="block">
+        <h2>Section 3</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit.</p>
+    </div>
+
+    <!-- добавим много блоков для "веса" -->
+    <div class="block repeat"></div>
+    <div class="block repeat"></div>
+    <div class="block repeat"></div>
+    <div class="block repeat"></div>
+    <div class="block repeat"></div>
+</section>
+
+<section class="gallery">
+    <h2>Gallery</h2>
+    <div class="images">
+        <img src="assets/img1.jpg">
+        <img src="assets/img2.jpg">
+        <img src="assets/galaxy-nature-aesthetic-background-starry-sky-mountain-remixed-media.jpg">
+        <img src="assets/aesthetic-retro-vaporwave-landscape.jpg">
+    </div>
+</section>
+
+<footer>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
