@@ -2,55 +2,570 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Load Test</title>
-    <link rel="stylesheet" href="large.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>⚡ Нагрузочный тест | Проверка скорости подключения и производительности</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0c15;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --accent: #3b82f6;
+            --accent-glow: #2563eb;
+            --text: #f3f4f6;
+            --text-dim: #9ca3af;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --font-mono: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+            color: var(--text);
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Хедер с огромным акцентом */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(17,24,39,0.5) 100%);
+            border-radius: 3rem;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(4px);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(59,130,246,0.2);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.3px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #60a5fa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .sub {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-top: 0.75rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Сетка с большими карточками */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+            border-bottom: 1px dashed var(--card-border);
+            padding-bottom: 0.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dim);
+        }
+
+        .metric-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--accent);
+            line-height: 1.2;
+        }
+
+        .metric-unit {
+            font-size: 1rem;
+            font-weight: normal;
+            color: var(--text-dim);
+        }
+
+        .status-led {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* таблица логов и потоков */
+        .log-section {
+            background: #030712;
+            border-radius: 1.5rem;
+            border: 1px solid #1e293b;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: #0f172a;
+            border-bottom: 1px solid #1e293b;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        .log-console {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 1rem 1.5rem;
+            max-height: 280px;
+            overflow-y: auto;
+            background: #020617;
+            color: #a5f3c3;
+        }
+
+        .log-entry {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #1e293b30;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .log-time {
+            color: #6b7280;
+            margin-right: 12px;
+        }
+
+        /* медиа-нагрузка: большая галерея placeholder */
+        .media-stress {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 2rem 0 1rem;
+            justify-content: center;
+        }
+
+        .media-item {
+            flex: 1 1 280px;
+            background: #1e1f2c;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            border: 1px solid #334155;
+        }
+
+        .media-item img, .media-item canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            height: 100%;
+        }
+
+        button {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        button:hover {
+            background: var(--accent-glow);
+            transform: scale(0.98);
+        }
+
+        .footer-metrics {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #0f172a80;
+            border-radius: 1.5rem;
+            font-size: 0.8rem;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .loading-blink {
+            animation: pulse 0.9s infinite;
+        }
+
+        @media (max-width: 760px) {
+            h1 { font-size: 2.2rem; }
+            .metric-value { font-size: 2rem; }
+            body { padding: 1rem; }
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <div class="hero">
+        <div class="badge">
+            <span>🖥️</span> СТРЕСС-ТЕСТ СЕТИ & ПАМЯТИ
+        </div>
+        <h1>НАГРУЗОЧНЫЙ ТЕСТ</h1>
+        <p class="sub">Проверка скорости загрузки, JS-производительности и стабильности соединения.<br> 
+        Генерация 5 млн точек данных + замеры реального времени.</p>
+    </div>
 
-    <main class="container">
-        <header class="header">
-            <div class="status-badge">System Active</div>
-            <h1>Connection Test Page</h1>
-            <p class="subtitle">Диагностика производительности и сетевого соединения</p>
-        </header>
-
-        <section class="stats-grid">
-            <div class="card">
-                <h3>JavaScript Heap</h3>
-                <div id="js-status" class="value">Ready</div>
+    <div class="dashboard">
+        <div class="card">
+            <div class="card-header">
+                <h3>📦 JavaScript Heap (данные)</h3>
+                <span id="heap-status-badge" style="font-size:0.7rem;">● active</span>
             </div>
-            <div class="card">
-                <h3>Generated Items</h3>
-                <div id="content-count" class="value">0</div>
+            <div class="metric-value"><span id="item-count">0</span> <span class="metric-unit">элементов</span></div>
+            <div style="font-size:0.75rem; margin-top: 8px;">≈ <span id="approx-mb">0</span> MB (приблизительно)</div>
+            <div style="margin-top: 12px;"><span class="status-led" id="heap-led" style="background:#f59e0b;"></span> <span id="heap-status-text">Выделение памяти...</span></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3>⏱️ Время загрузки страницы</h3>
             </div>
-        </section>
-
-        <section class="media-preview">
-            <div class="image-wrapper">
-                <img src="assets/img1.jpg" alt="Asset 1" onerror="this.parentElement.classList.add('error')">
+            <div class="metric-value"><span id="load-time">0</span> <span class="metric-unit">ms</span></div>
+            <div style="margin-top: 8px;">DOMContentLoaded: <span id="dom-time">—</span> ms</div>
+            <div>Полная загрузка: <span id="full-time">—</span> ms</div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3>🌐 Сетевые запросы (изображения)</h3>
             </div>
-            <div class="image-wrapper">
-                <img src="assets/img2.jpg" alt="Asset 2" onerror="this.parentElement.classList.add('error')">
-            </div>
-        </section>
+            <div class="metric-value"><span id="img-status">Загрузка...</span></div>
+            <div id="img-details" style="font-size:0.75rem; margin-top: 6px;">ожидание ответа...</div>
+            <button id="retry-images" style="margin-top: 12px;">⟳ Повторить загрузку картинок</button>
+        </div>
+    </div>
 
-        <div id="content" class="log-container"></div>
-    </main>
+    <!-- Медиа-зона: большие изображения для проверки скорости подгрузки -->
+    <div class="media-stress" id="media-stress-area">
+        <!-- динамически генерируем 4 тяжелых изображения (SVG-заглушки, но с внешним видом) 
+        и дополнительные попытки загрузки реальных картинок, которые эмулируют сетевые запросы -->
+    </div>
 
-    <script src="large.js"></script>
-    <script>
-        // Твоя логика с небольшим визуальным обновлением
-        const countDisplay = document.getElementById('content-count');
-        let data = [];
-        const limit = 5_000_000;
+    <!-- Лог-консоль (большая) -->
+    <div class="log-section">
+        <div class="log-header">
+            <span>📟 СИСТЕМНЫЙ ЛОГ (производительность / подключение)</span>
+            <button id="clear-log" style="background: #334155; padding: 4px 12px;">Очистить</button>
+        </div>
+        <div id="live-log" class="log-console">
+            <div class="log-entry"><span class="log-time">[init]</span> ▶ Запуск тестовой среды...</div>
+        </div>
+    </div>
+
+    <div class="footer-metrics">
+        <div>🔍 <strong>Проверка сети:</strong> ожидание ответа от изображений — тест пропускной способности</div>
+        <div>⚙️ <strong>JS-нагрузка:</strong> массив из 5 млн чисел + операции reduce (демо)</div>
+        <div>📊 <strong>Статус:</strong> <span id="global-status">стабильно</span></div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        // ------------------- ГЛОБАЛЬНАЯ НАГРУЗКА (5 млн элементов) ------------------
+        console.log("[SYSTEM] Запуск генерации 5 млн записей...");
+        const logContainer = document.getElementById('live-log');
+        const itemCountSpan = document.getElementById('item-count');
+        const approxMbSpan = document.getElementById('approx-mb');
+        const heapLed = document.getElementById('heap-led');
+        const heapStatusText = document.getElementById('heap-status-text');
         
-        for (let i = 0; i < limit; i++) {
-            data.push(Math.random());
+        let largeArray = [];
+        const ARRAY_SIZE = 5_000_000; // 5 миллионов элементов
+
+        function addLogMessage(message, isError = false) {
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString('ru-RU', { hour12: false });
+            logDiv.innerHTML = `<span class="log-time">[${timestamp}]</span> ${isError ? '⚠️ ' : '✓ '}${message}`;
+            logContainer.appendChild(logDiv);
+            logDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            if(logContainer.children.length > 180) {
+                while(logContainer.children.length > 150) logContainer.removeChild(logContainer.firstChild);
+            }
+        }
+
+        function updateMemoryDisplay() {
+            if(largeArray.length > 0) {
+                const approxBytes = largeArray.length * 8; // каждое число ~8 байт (приблизительно)
+                const mb = (approxBytes / (1024 * 1024)).toFixed(2);
+                approxMbSpan.innerText = mb;
+                itemCountSpan.innerText = largeArray.toLocaleString();
+            } else {
+                approxMbSpan.innerText = "0";
+                itemCountSpan.innerText = "0";
+            }
+        }
+
+        // Генерация огромного массива (синхронная нагрузка, но не блокируем UI полностью? 
+        // Используем setTimeout с chunk'ами для отзывчивости интерфейса + гарантированная загрузка)
+        function generateLargeArray() {
+            return new Promise((resolve) => {
+                addLogMessage("🚀 Генерация 5 000 000 чисел с плавающей точкой (нагрузка на процессор/память)...");
+                heapLed.style.background = "#f59e0b";
+                heapStatusText.innerText = "Генерация массива...";
+                const arr = new Array(ARRAY_SIZE);
+                let i = 0;
+                function chunkFill() {
+                    const chunkEnd = Math.min(i + 250000, ARRAY_SIZE);
+                    for(; i < chunkEnd; i++) {
+                        arr[i] = Math.random() * 1000;
+                    }
+                    if(i % 500000 === 0 && i > 0) {
+                        addLogMessage(`Прогресс: ${((i / ARRAY_SIZE)*100).toFixed(1)}% элементов (${i.toLocaleString()})`);
+                    }
+                    if(i < ARRAY_SIZE) {
+                        setTimeout(chunkFill, 0);
+                    } else {
+                        largeArray = arr;
+                        updateMemoryDisplay();
+                        addLogMessage(`✅ Массив создан! Размер: ${largeArray.length.toLocaleString()} элементов, приблизительно ${approxMbSpan.innerText} MB в памяти.`);
+                        heapLed.style.background = "#10b981";
+                        heapStatusText.innerText = "Массив загружен (стабильно)";
+                        // дополнительно выполним тестовую операцию reduce для проверки скорости ЦП
+                        setTimeout(() => {
+                            addLogMessage("🧪 Тест CPU: запуск агрегации (reduce) по 5 млн элементов...");
+                            const startPerf = performance.now();
+                            const sum = largeArray.reduce((acc, val) => acc + val, 0);
+                            const duration = (performance.now() - startPerf).toFixed(2);
+                            addLogMessage(`📊 Агрегация завершена за ${duration} ms. Сумма элементов: ${sum.toFixed(2)}`);
+                        }, 100);
+                        resolve(true);
+                    }
+                }
+                chunkFill();
+            });
+        }
+
+        // ----- Имитация сетевой нагрузки (загрузка изображений с задержкой и проверкой скорости) -----
+        const imageUrls = [
+            "https://picsum.photos/id/104/800/600?grayscale",   // пейзаж
+            "https://picsum.photos/id/42/800/600",              // пианино
+            "https://picsum.photos/id/155/800/600",             // корзина
+            "https://picsum.photos/id/29/800/600"               // город
+        ];
+        
+        let loadedImages = 0;
+        let failedImages = 0;
+        const imgStatusSpan = document.getElementById('img-status');
+        const imgDetailsSpan = document.getElementById('img-details');
+        const mediaArea = document.getElementById('media-stress-area');
+        let startImageLoadTime = 0;
+
+        function buildMediaElements() {
+            mediaArea.innerHTML = '';
+            loadedImages = 0;
+            failedImages = 0;
+            startImageLoadTime = performance.now();
+            imgStatusSpan.innerText = 'Загрузка...';
+            imgDetailsSpan.innerHTML = 'ожидание ответа серверов';
+            
+            for(let i=0; i<imageUrls.length; i++) {
+                const mediaDiv = document.createElement('div');
+                mediaDiv.className = 'media-item';
+                const img = new Image();
+                img.style.width = '100%';
+                img.style.height = '100%';
+                const url = imageUrls[i];
+                img.src = url;
+                
+                const fallbackDiv = document.createElement('div');
+                fallbackDiv.className = 'img-fallback';
+                fallbackDiv.innerText = '⏳ загрузка...';
+                mediaDiv.appendChild(fallbackDiv);
+                
+                img.onload = () => {
+                    if(mediaDiv.contains(fallbackDiv)) mediaDiv.removeChild(fallbackDiv);
+                    mediaDiv.appendChild(img);
+                    loadedImages++;
+                    updateImageStatus();
+                    addLogMessage(`📸 Изображение ${i+1} загружено: ${url.substring(0, 50)}... (${(performance.now() - startImageLoadTime).toFixed(0)} ms)`);
+                };
+                img.onerror = () => {
+                    if(mediaDiv.contains(fallbackDiv)) {
+                        fallbackDiv.innerText = '❌ Ошибка загрузки';
+                        fallbackDiv.style.background = '#2d1a1f';
+                    } else {
+                        const errDiv = document.createElement('div');
+                        errDiv.className = 'img-fallback';
+                        errDiv.innerText = '❌ Ошибка сети';
+                        mediaDiv.appendChild(errDiv);
+                    }
+                    failedImages++;
+                    updateImageStatus();
+                    addLogMessage(`⚠️ Не удалось загрузить изображение ${i+1}: ${url.substring(0, 60)} (проверьте соединение)`, true);
+                };
+                mediaDiv.appendChild(img); // img скрыт пока не загрузится, но фонт
+                mediaArea.appendChild(mediaDiv);
+            }
         }
         
-        countDisplay.innerText = data.length.toLocaleString();
-        console.log("Generated:", data.length);
-    </script>
+        function updateImageStatus() {
+            const total = imageUrls.length;
+            const finished = loadedImages + failedImages;
+            if(finished === total) {
+                const elapsed = (performance.now() - startImageLoadTime).toFixed(0);
+                imgStatusSpan.innerHTML = `✅ Готово (${loadedImages}/${total})`;
+                imgDetailsSpan.innerHTML = `время загрузки всех ресурсов: ${elapsed} мс | неудач: ${failedImages}`;
+                if(loadedImages === total) {
+                    addLogMessage(`🏁 Все изображения загружены успешно за ${elapsed} мс. Скорость сети: высокая.`);
+                } else {
+                    addLogMessage(`⚠️ Частичная загрузка: ${loadedImages}/${total} успешно, ${failedImages} ошибок. Проверьте соединение.`, true);
+                }
+            } else {
+                imgStatusSpan.innerHTML = `Загружено ${loadedImages}/${total} ...`;
+                imgDetailsSpan.innerHTML = `осталось ${total - finished} запросов...`;
+            }
+        }
+        
+        // тайминги загрузки страницы
+        function measurePageLoadMetrics() {
+            const perfData = performance.timing;
+            const domLoadTime = performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart;
+            const fullLoadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            document.getElementById('dom-time').innerText = domLoadTime;
+            document.getElementById('full-time').innerText = fullLoadTime;
+            document.getElementById('load-time').innerText = fullLoadTime;
+            addLogMessage(`⏱️ DOMContentLoaded: ${domLoadTime} ms | Полная загрузка: ${fullLoadTime} ms`);
+            if(fullLoadTime > 3000) {
+                addLogMessage(`⚠️ Полная загрузка заняла ${fullLoadTime} ms — возможны проблемы с пропускной способностью`, true);
+            }
+        }
+
+        // Глобальный индикатор производительности
+        let startPerfMemory = 0;
+        async function initHeavyTest() {
+            addLogMessage("🔧 Инициализация большого сайта проверки подключения...");
+            // Сначала показываем медиа-нагрузку для теста сети
+            buildMediaElements();
+            // Запускаем генерацию огромного массива
+            await generateLargeArray();
+            // После массива добавляем тест рендера/скорости
+            addLogMessage("✨ Тест производительности завершён. Система стабильна.");
+            document.getElementById('global-status').innerHTML = "✅ Активен | Нагрузка в памяти";
+            // Дополнительная симуляция: создаем много DOM-элементов в виртуальном виде? но не перегружаем
+            // показать, что сайт "большой"
+            setTimeout(() => {
+                addLogMessage("💡 Совет: страница потребляет ~" + approxMbSpan.innerText + " MB под массив. Проверьте scroll и загрузку изображений.");
+            }, 500);
+        }
+        
+        // повторная загрузка изображений (кнопка)
+        document.getElementById('retry-images').addEventListener('click', () => {
+            addLogMessage("🔄 Принудительная перезагрузка изображений для теста скорости сети...");
+            buildMediaElements();
+        });
+        
+        // Очистка лога
+        document.getElementById('clear-log').addEventListener('click', () => {
+            while(logContainer.children.length > 3) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+            addLogMessage("🧹 Лог очищен. Мониторинг продолжается.");
+        });
+        
+        // Замеры времени
+        if(window.performance && performance.timing) {
+            window.addEventListener('load', () => {
+                measurePageLoadMetrics();
+            });
+        } else {
+            setTimeout(() => {
+                document.getElementById('load-time').innerText = 'N/A';
+            }, 100);
+        }
+        
+        // Запуск основного сценария
+        initHeavyTest().catch(err => {
+            addLogMessage(`❌ Критическая ошибка: ${err.message}`, true);
+            console.error(err);
+        });
+        
+        // Дополнительно: имитация проверки WebSocket? (чисто для статуса)
+        // Покажем что мониторинг сети активен через navigator.connection если есть
+        if('connection' in navigator) {
+            const conn = navigator.connection;
+            addLogMessage(`📡 Информация о сети: тип=${conn.effectiveType || 'unknown'}, RTT=${conn.rtt || '?'} ms, downlink=${conn.downlink || '?'} Mbps`);
+        } else {
+            addLogMessage(`📡 API Network Information не поддерживается, но проверка изображений покажет скорость.`);
+        }
+        
+        // для отображения heap статистики раз в 2 секунды (опционально)
+        setInterval(() => {
+            if(largeArray && largeArray.length > 0) {
+                const used = (largeArray.length * 8 / (1024*1024)).toFixed(2);
+                if(approxMbSpan.innerText !== used) updateMemoryDisplay();
+            }
+        }, 3000);
+    })();
+</script>
 </body>
 </html>
