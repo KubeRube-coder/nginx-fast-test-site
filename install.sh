@@ -35,8 +35,8 @@ rm -f /etc/nginx/sites-enabled/default
 echo "Copying site..."
 mkdir -p /var/www/loadtest
 curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/index.html -o /var/www/loadtest/index.html
-curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/large.js -o /var/www/loadtest/large.js
-curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/large.css -o /var/www/loadtest/large.css
+curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/script.js -o /var/www/loadtest/script.js
+curl -sSL https://raw.githubusercontent.com/KubeRube-coder/nginx-fast-test-site/refs/heads/main/site/styles.css -o /var/www/loadtest/styles.css
 
 echo "Copying site assets..."
 mkdir -p /var/www/loadtest/assets
